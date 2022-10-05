@@ -5,48 +5,46 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/music_player_bloc.dart';
 
 class MediaControls extends StatelessWidget {
-  MediaControls({Key? key}) : super(key: key);
-  late MusicPlayerBloc _bloc;
-  final double buttonPadding = 15;
+  MediaControls({required this.isplaying, Key? key}) : super(key: key);
+  static const double iconSize = 35;
+  final bool isplaying;
+  late final MusicPlayerBloc bloc;
   @override
   Widget build(BuildContext context) {
-    _bloc = BlocProvider.of<MusicPlayerBloc>(context);
-    return BlocBuilder<MusicPlayerBloc, MusicPlayerState>(
-      builder: (context, state) {
-        return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _previousTrack(),
-                _playButton(state),
-                _nextTrack(),
-              ],
-            ));
-      },
+    bloc = BlocProvider.of<MusicPlayerBloc>(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _previousTrack(),
+          _playButton(),
+          _nextTrack(),
+        ],
+      ),
     );
   }
 
   Widget _previousTrack() {
     return MediaButton(
       iconButton: IconButton(
-        onPressed: () => _bloc.add(PreviousTrackButtonPressed()),
+        onPressed: () => bloc.add(PreviousTrackButtonPressed()),
         icon: const Icon(
           Icons.skip_previous,
-          size: 35,
+          size: iconSize,
         ),
         color: const Color(0xffc5c5c5),
       ),
     );
   }
 
-  Widget _playButton(MusicPlayerState state) {
+  Widget _playButton() {
     return MediaButton(
         iconButton: IconButton(
-          onPressed: () => _bloc.add(PlayPauseButtonPressed()),
+          onPressed: () => bloc.add(PlayPauseButtonPressed()),
           icon: Icon(
-            _bloc.isplaying ? Icons.pause : Icons.play_arrow,
-            size: 35,
+            isplaying ? Icons.pause : Icons.play_arrow,
+            size: iconSize,
           ),
           color: Colors.white,
         ),
@@ -56,10 +54,10 @@ class MediaControls extends StatelessWidget {
   Widget _nextTrack() {
     return MediaButton(
       iconButton: IconButton(
-        onPressed: () => _bloc.add(NextTrackButtonPressed()),
+        onPressed: () => bloc.add(NextTrackButtonPressed()),
         icon: const Icon(
           Icons.skip_next,
-          size: 35,
+          size: iconSize,
         ),
         color: const Color(0xffc5c5c5),
       ),
