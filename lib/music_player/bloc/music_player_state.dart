@@ -1,14 +1,22 @@
 part of 'music_player_bloc.dart';
 
-abstract class MusicPlayerState {}
-
-class InitialState extends MusicPlayerState {}
-
-class PlayPauseButtonResponse extends MusicPlayerState {
-  bool isplaying;
-  PlayPauseButtonResponse(this.isplaying);
+abstract class MusicPlayerState {
+  bool isPlaying;
+  MusicPlayerState(this.isPlaying);
 }
 
-class NavigateToNextTrack extends MusicPlayerState {}
+class InitialState extends MusicPlayerState {
+  InitialState(super.isPlaying);
+}
 
-class NavigateToPreviousTrack extends MusicPlayerState {}
+class MusicStatusUpdated extends MusicPlayerState {
+  MusicStatusUpdated(super.isPlaying);
+}
+
+class NavigateToPreviousTrack extends MusicPlayerState {
+  NavigateToPreviousTrack(super.isPlaying);
+}
+
+class NavigateToNextTrack extends MusicPlayerState {
+  NavigateToNextTrack(super.isPlaying);
+}
