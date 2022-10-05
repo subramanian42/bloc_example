@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../bloc/music_player_bloc.dart';
 
 class AlbumArt extends StatefulWidget {
-  const AlbumArt({Key? key}) : super(key: key);
-
+  const AlbumArt({required this.image, required this.isPlaying, Key? key})
+      : super(key: key);
+  final String image;
+  final bool isPlaying;
   @override
   State<AlbumArt> createState() => _AlbumArtState();
 }
 
 class _AlbumArtState extends State<AlbumArt>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
+  late AnimationController _rotationController;
   @override
   void initState() {
-    _animationController = AnimationController(
+    _rotationController = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     );
@@ -24,32 +23,26 @@ class _AlbumArtState extends State<AlbumArt>
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _rotationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MusicPlayerBloc, MusicPlayerState>(
-      listener: (context, state) {
-        if (state is PlayPauseButtonResponse && state.isplaying) {
-          _animationController.repeat();
-        } else {
-          _animationController.stop();
-        }
-      },
-      child: RotationTransition(
-        turns: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-        child: Container(
-          height: 260,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: AssetImage(
-                'assets/images/track_image_1.jpeg',
-              ),
-              fit: BoxFit.contain,
-            ),
+    if (widget.isPlaying) {
+      _rotationController.repeat();
+    } else {
+      _rotationController.stop();
+    }
+    return RotationTransition(
+      turns: Tween(begin: 0.0, end: 1.0).animate(_rotationController),
+      child: Container(
+        height: 260,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            image: AssetImage(widget.image),
+            fit: BoxFit.contain,
           ),
         ),
       ),
