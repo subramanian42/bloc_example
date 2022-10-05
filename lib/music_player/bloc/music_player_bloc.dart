@@ -4,14 +4,26 @@ part 'music_player_state.dart';
 part 'music_player_event.dart';
 
 class MusicPlayerBloc extends Bloc<MusicPlayerEvent, MusicPlayerState> {
-  MusicPlayerBloc() : super(InitialState()) {
+  MusicPlayerBloc({bool isPlaying = false}) : super(InitialState(isPlaying)) {
+    _playMusic = isPlaying;
     on<PlayPauseButtonPressed>(_handlePlay);
+    on<PreviousTrackButtonPressed>(_handlePreviousTrack);
+    on<NextTrackButtonPressed>(_handleNextTrack);
   }
-  bool isplaying = false;
+  late bool _playMusic;
   void _handlePlay(
       PlayPauseButtonPressed event, Emitter<MusicPlayerState> emit) {
-    isplaying = !isplaying;
+    _playMusic = !_playMusic;
+    emit(MusicStatusUpdated(_playMusic));
+  }
 
-    emit(PlayPauseButtonResponse(isplaying));
+  void _handlePreviousTrack(
+      PreviousTrackButtonPressed event, Emitter<MusicPlayerState> emit) {
+    emit(NavigateToPreviousTrack(_playMusic));
+  }
+
+  void _handleNextTrack(
+      NextTrackButtonPressed event, Emitter<MusicPlayerState> emit) {
+    emit(NavigateToNextTrack(_playMusic));
   }
 }
